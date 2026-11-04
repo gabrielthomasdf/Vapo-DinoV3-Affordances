@@ -60,7 +60,19 @@ Both approaches contain 100 labeled seeds with the same 15 objects per seed. All
 
 Here, baseline denotes the original **VAPO with ResNet18 affordances and reward shaping**. The recovered policy config enables affordance inputs, distance and reward densification. A separate saved policy named `baseline` disables those features, but the A/B runners select the `vapo` policy for both approaches.
 
-The segmentation gain did **not** translate to better task success under these recorded conditions. Encoder choice alone cannot be identified as the cause: checkpoint selection, training schedule, label construction, affordance settings, and policy compatibility still need matched evidence. The training log's `val_miou` is foreground IoU averaged over batches, whereas the table's binary mIoU averages foreground and background IoUs from global counts. [Metric definitions and empty-mask conventions](docs/experimental-reproduction.md#metric-definitions) explain the numerical difference.
+The training log's `val_miou` is foreground IoU averaged over batches, whereas the table's binary mIoU averages foreground and background IoUs from global counts. [Metric definitions and empty-mask conventions](docs/experimental-reproduction.md#metric-definitions) explain the numerical difference.
+
+## Research Hypotheses and Future Experiments
+
+The initial hypothesis was that DINOv3 could improve affordance perception and robotic manipulation while keeping the pretrained SAC policy fixed. The segmentation gains and lower task success above motivated three further hypotheses. The comparison does not isolate an encoder effect: input resolution, channels, decoder structure and affordance-label parameters also differ.
+
+- **Observation distribution shift.** Masks and derived spatial cues may differ from those seen during SAC training, even when segmentation scores improve, making them less useful to the existing policy.
+- **Policy adaptation.** Affordances may provide coarse spatial guidance while SAC supplies the fine control needed for manipulation. Adapting the policy to DINOv3 observations could therefore matter more than improving segmentation alone.
+- **Localization quality.** Better mask overlap need not yield a better manipulation point. Errors in Hough-voted centers or their conversion from 2D pixels to 3D coordinates could impair execution.
+
+Proposed controlled ablations would compare predicted and ground-truth masks, estimated and ground-truth centers, and frozen versus adapted SAC policies. Each comparison would hold the other pipeline stages, observation settings and evaluation conditions fixed, with centers expressed in consistent coordinate frames. Policy retraining or fine-tuning on DINOv3 observations using simulated data is a proposed next experiment; real-data adaptation and real-robot evaluation are further possible extensions.
+
+These explanations remain unconfirmed. The ablations, SAC adaptation and real-robot experiments described here are proposals, not completed work or requirements for the current artifact audit.
 
 ## Reproduction
 
