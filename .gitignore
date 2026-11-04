@@ -102,6 +102,7 @@ fabric.properties
 # tensorboard
 events.out*
 *.svg
+!docs/experiments/recovered/*.svg
 
 # pdfs
 *.pdf

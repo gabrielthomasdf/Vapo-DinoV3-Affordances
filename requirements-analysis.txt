@@ -1,0 +1,6 @@
+# Only needed for figures; core recalculation uses Python's standard library.
+matplotlib>=3.9,<4
+# Only needed for calculation tests.
+pytest>=8,<10
+# Only needed to audit the recovered provenance archive's Hydra configurations.
+PyYAML>=6,<7

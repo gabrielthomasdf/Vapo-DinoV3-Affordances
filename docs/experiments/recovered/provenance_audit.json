@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "archive_sha256": "b04e3eacfb99538b5535a4f658da82ecf1169e868ff9a593927e71c0d8567441",
+  "archive_bytes": 163835,
+  "audit_script_sha256": "cb522e8554200fef41d61ae180c6bc31644d5aca5bee2dce3b6173e70bdbd88e",
+  "member_sha256": {
+    "eval_affordance_dinov3_vs_baseline.py": "41bbd3bdbdb40c01fc20db0675d4c65d3480a677334867268c249e39bdc3de55",
+    "scripts/eval_tabletop.py": "a78d4186ae875766b9902243289994584894966834b1498c48fed0fda08b41cf",
+    "run_baseline_100.sh": "f9c54d6586cbb9a7acfd1bf7fbc856d280e3254ae5a81977733500ae7064af01",
+    "run_dinov3_100.sh": "09aeb6a4de6856e30ed18e911142f8c66aaafc413ee3facb4bf78b76335bfa94",
+    "parse_ab_results.py": "c96be520b64db6ce20e60a84f007f84d46f16674a462a8cb8d72b472cfd482c9",
+    "ic_vapo_hydra_20261104.tar.gz": "7066876cb2bdf813d1dfb00d9bf6550cc879d984bff3610acc9be2706212d036"
+  },
+  "robotic_csv_sha256": "c3e7cc0decebe2cd33a05fab370bc0e9dc37d93dcc9d06a531ac49c0409a771c",
+  "robotic_log_validation": {
+    "rows": 3000,
+    "all_rows_and_order_match": true,
+    "archived_csv_byte_identical": true,
+    "runs": {
+      "baseline": {
+        "logs": 100,
+        "episode_count_distribution": {
+          "15": 100
+        },
+        "zero_exit_statuses": 100
+      },
+      "dinov3": {
+        "logs": 100,
+        "episode_count_distribution": {
+          "15": 100
+        },
+        "zero_exit_statuses": 100
+      }
+    }
+  },
+  "captured_commits": {
+    "reproduction/ab_evaluation/git_commit.txt": "bbded785430e5cded88ba57aa8ca62458ef038ce",
+    "reproduction/ab_evaluation/metadata/git_commit.txt": "4caeecf338c9a758607f1737adf222150806f9cb",
+    "reproduction/ab_evaluation/dinov3/git_commit.txt": "bbded785430e5cded88ba57aa8ca62458ef038ce"
+  },
+  "runtime_commit_mentions": {
+    "4caeecf338c9a758607f1737adf222150806f9cb": 200
+  },
+  "archived_evaluator_matches_git_versions": {
+    "4caeecf338c9a758607f1737adf222150806f9cb": true,
+    "bbded785430e5cded88ba57aa8ca62458ef038ce": false
+  },
+  "hydra_validation": {
+    "baseline": {
+      "configs": 100,
+      "matching_requested_seeds": 100,
+      "composed_env_seed_values": {
+        "None": 100
+      },
+      "composed_egl_values": [
+        false
+      ],
+      "distinct_configs_excluding_test_seed": 1
+    },
+    "dinov3": {
+      "configs": 100,
+      "matching_requested_seeds": 100,
+      "composed_env_seed_values": {
+        "None": 100
+      },
+      "composed_egl_values": [
+        false
+      ],
+      "distinct_configs_excluding_test_seed": 1
+    }
+  },
+  "cross_model_changed_composed_fields": [
+    "affordance.gripper_cam.hyperparameters.cfg.dinov3_cfg.freeze_backbone",
+    "affordance.gripper_cam.hyperparameters.cfg.dinov3_cfg.model_name",
+    "affordance.gripper_cam.hyperparameters.cfg.dinov3_cfg.normalize_input",
+    "affordance.gripper_cam.hyperparameters.cfg.dinov3_cfg.repo_dir",
+    "affordance.gripper_cam.hyperparameters.cfg.dinov3_cfg.weights_path",
+    "affordance.gripper_cam.hyperparameters.cfg.encoder_type",
+    "affordance.gripper_cam.hyperparameters.cfg.unet_cfg.decoder_channels",
+    "affordance.gripper_cam.transforms.masks",
+    "affordance.gripper_cam.transforms.training",
+    "affordance.gripper_cam.transforms.validation",
+    "gripper_cam_aff_path",
+    "img_resize",
+    "test.preserve_current_affordance"
+  ],
+  "same_resolved_policy_reference": true,
+  "checkpoint_references": {
+    "baseline": {
+      "policy_name": "most_tasks_from_15",
+      "policy_run_name": "vapo",
+      "gripper_checkpoint_filename": "gripper_tabletop.ckpt",
+      "static_checkpoint_filename": "static_tabletop.ckpt",
+      "encoder_type": "resnet18",
+      "decoder_channels": [
+        128,
+        64,
+        32
+      ],
+      "policy_img_size": 64
+    },
+    "dinov3": {
+      "policy_name": "most_tasks_from_15",
+      "policy_run_name": "vapo",
+      "gripper_checkpoint_filename": "best_val_miou.ckpt",
+      "static_checkpoint_filename": "static_tabletop.ckpt",
+      "encoder_type": "dinov3",
+      "decoder_channels": [
+        256,
+        128,
+        64,
+        32
+      ],
+      "policy_img_size": 64
+    }
+  },
+  "recorded_environment_packages": {
+    "python": "3.11.15",
+    "hydra-core": "1.3.4",
+    "numpy": "1.26.4",
+    "pybullet": "3.2.7",
+    "pytorch-lightning": "1.5.9",
+    "segmentation-models-pytorch": "0.3.3",
+    "torch": "2.7.1+cu128",
+    "torchvision": "0.22.1+cu128"
+  },
+  "perception_source_review": {
+    "function_lines": {
+      "predict_and_time": 397,
+      "warm_up": 417,
+      "model_summary": 437,
+      "vapo_validation_iou": 455,
+      "main": 475
+    },
+    "default_warmup_iterations": 20,
+    "actual_warmup_override_recovered": false,
+    "protocol": "Batch 1; inference_mode; eval models; optional FP16 autocast; CUDA synchronization before/after forward; perf_counter.",
+    "timed_scope": "Encoder, decoder, segmentation head and direction head; excludes preprocessing, H2D transfer, argmax, Hough voting and SAC.",
+    "model_order": "baseline then dinov3 for every sample; not randomized",
+    "summary_median": "torch.tensor(latencies).median(): lower middle sample in float32",
+    "full_perception_command_recovered": false
+  },
+  "limitations": [
+    "No checkpoint binaries or checkpoint content-hash manifest supplied.",
+    "No dataset/split manifest or exact perception command supplied.",
+    "Training seed is not established by the gripper_seed0 folder name.",
+    "Full model evaluation and physical-state/RNG reproduction remain unexecuted."
+  ],
+  "supplement": {
+    "archive_sha256": "439b16ceb6ea8bac6704c0be24e18e1e9d6ddca2f79186fe569258d64cab849e",
+    "archive_bytes": 19889473,
+    "member_sha256": {
+      "baseline/.hydra/config.yaml": "33fb71a611dc3a54156f0b728ed8b993717f9b82fcb33ac055d16559843f133b",
+      "baseline/.hydra/overrides.yaml": "c4d1312cf92d7bc390ad43cce93c97697464fb2826b6f278539edcbbdd1182fd",
+      "vapo/.hydra/config.yaml": "bfc90251f77a042dcd09aab57c6cf7497ad8d9b41c0ec11a5b95aef326776ca4",
+      "vapo/.hydra/overrides.yaml": "1a292f436bcbf4b84ceaa237627d6903c7ae28d0b0590a9bf6d56fa3b991f870",
+      "reproduction/dinov3_affordance/gripper_seed0/.hydra/config.yaml": "62f89486c44ada76f667ce517d2d9aa02f8e2f31cd52e17951c5ac101cd04e1f",
+      "reproduction/dinov3_affordance/gripper_seed0/.hydra/overrides.yaml": "b6e0cf3aa2a68e1688de49ee5377f6d3a4da4987a8f408ddaf1426ed66f25409",
+      "eval_affordance_dinov3_vs_baseline.py": "41bbd3bdbdb40c01fc20db0675d4c65d3480a677334867268c249e39bdc3de55"
+    },
+    "perception_evaluator_matches_primary_package": true,
+    "saved_policy_configs": {
+      "baseline": {
+        "use_affordance": false,
+        "use_distance": false,
+        "densify_reward": false,
+        "env_seed": null,
+        "use_egl": false,
+        "policy_img_size": 64,
+        "network": {
+          "hidden_dim": 256,
+          "latent_dim": 16,
+          "n_layers": 4,
+          "actor_net": "CNNPolicyDenseNet",
+          "critic_net": "CNNCriticDenseNet"
+        }
+      },
+      "vapo": {
+        "use_affordance": true,
+        "use_distance": true,
+        "densify_reward": true,
+        "env_seed": null,
+        "use_egl": false,
+        "policy_img_size": 64,
+        "network": {
+          "hidden_dim": 256,
+          "latent_dim": 16,
+          "n_layers": 4,
+          "actor_net": "CNNPolicyDenseNet",
+          "critic_net": "CNNCriticDenseNet"
+        }
+      }
+    },
+    "selected_policy_config": "vapo/.hydra/config.yaml",
+    "selection_basis": "Selected by the common policy-run directory name in both primary resolved captures.",
+    "selected_policy_uses_affordance": true,
+    "dino_training": {
+      "n_epochs": 50,
+      "camera": "gripper",
+      "dataset_name": "simulation",
+      "input_size": 128,
+      "radius": 20,
+      "batch_size": 2,
+      "num_workers": 4,
+      "trainer_gpus": 1,
+      "trainer_precision": 16,
+      "trainer_strategy": null,
+      "freeze_backbone": true,
+      "normalize_input": true,
+      "train_samples_logged": [
+        133528
+      ],
+      "validation_samples_logged": [
+        6386
+      ],
+      "training_seed_explicitly_recorded": false,
+      "best_checkpoint_save": {
+        "epoch": 28,
+        "global_step": 1936155,
+        "val_miou": 0.72213,
+        "filename": "best_val_miou.ckpt"
+      }
+    },
+    "console_log": {
+      "bytes": 395312256,
+      "sha256": "2df3e17565ec9f32b6287ce0964b2dbbab54b4392bc1b85aad409af06521322a",
+      "hex64_tokens_found": 0,
+      "searched_keyword_presence": {
+        "eval_affordance_dinov3_vs_baseline": false,
+        "--warmup": false,
+        "sha256": false,
+        "checksum": false,
+        "manifest": false,
+        "split.json": false
+      }
+    },
+    "remaining": [
+      "No checkpoint binaries or checkpoint content-hash manifest supplied.",
+      "No dataset/split manifest or exact perception command supplied.",
+      "Training seed is not established by the gripper_seed0 folder name.",
+      "Full model evaluation and physical-state/RNG reproduction remain unexecuted."
+    ]
+  }
+}
