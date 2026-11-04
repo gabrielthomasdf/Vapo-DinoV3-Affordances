@@ -288,11 +288,35 @@ def audit_supplement(path, primary_report):
             },
             "console_log": {"bytes": bytes_read, "sha256": digest.hexdigest(), "hex64_tokens_found": len(hashes),
                             "searched_keyword_presence": presence},
-            "remaining": ["No checkpoint binaries or checkpoint content-hash manifest supplied.",
-                          "No dataset/split manifest or exact perception command supplied.",
+            "package_scope_limits": ["These two archives do not contain checkpoint binaries or a checkpoint content-hash manifest.",
+                          "These two archives do not contain a dataset/split manifest or exact perception command.",
                           "Training seed is not established by the gripper_seed0 folder name.",
-                          "Full model evaluation and physical-state/RNG reproduction remain unexecuted."],
+                          "The audit inspected saved records and did not execute the researcher's existing experiments again."],
         }
+
+
+def attach_identity_report(report, path, metrics_dir):
+    identity = json.loads(Path(path).read_text(encoding="utf-8-sig"))
+    for name in ("metricas_por_imagem.csv", "resumo.json", "ab_results.csv"):
+        require(identity["metric_sources_sha256"][name] == sha256(Path(metrics_dir) / name),
+                "Identity audit is associated with different metric inputs")
+    require(identity["dataset_split_audit"]["matches_evaluated_ids_in_order"] is True,
+            "Identity audit did not verify the ordered partition")
+    require(identity["historical_command_audit"]["evaluator_sha256"] == report["member_sha256"]["eval_affordance_dinov3_vs_baseline.py"],
+            "Identity audit references a different evaluator")
+    report["identity_evidence"] = {
+        "report_sha256": sha256(Path(path)), "checkpoint_manifest_recorded": True,
+        "ordered_validation_ids_matched": True,
+        "reported_warmup_iterations": identity["historical_command_audit"]["warmup_iterations_recorded"],
+        "command_execution_independently_attested": False,
+    }
+    report["limitations"] = [
+        "Checkpoint hashes are recorded in a recovered manifest; weight binaries were not locally rehashed or runtime-attested.",
+        "Sample IDs and order match all split manifests; raw image/label contents and dataset release are not content-attested.",
+        "The reported historical command is compatible with code and AMP metadata, without a contemporaneous execution trace.",
+        "Training seed and complete control of all RNG streams/physical initial states remain undocumented.",
+        "Real comparative images were not found in the reported searches; no visual inference examples were fabricated.",
+    ]
 
 
 def main():
@@ -301,12 +325,15 @@ def main():
     parser.add_argument("--metrics-dir", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--supplement", type=Path, help="Optional saved-policy/training-config package")
+    parser.add_argument("--identity-report", type=Path, help="Optional audited checkpoint/split/command evidence")
     args = parser.parse_args()
     try:
         report = audit_archive(args.archive, args.metrics_dir)
         if args.supplement:
             report["supplement"] = audit_supplement(args.supplement, report)
-            report["limitations"] = report["supplement"]["remaining"]
+            report["limitations"] = report["supplement"]["package_scope_limits"]
+        if args.identity_report:
+            attach_identity_report(report, args.identity_report, args.metrics_dir)
     except (ValidationError, OSError, KeyError, ValueError, tarfile.TarError, yaml.YAMLError):
         parser.exit(2, "Provenance audit failed. Check the private archive schema and input consistency.\n")
     args.output.parent.mkdir(parents=True, exist_ok=True)

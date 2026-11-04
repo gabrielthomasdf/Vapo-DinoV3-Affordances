@@ -404,7 +404,7 @@ def make_plots(report, output):
     fig.supxlabel("Object labels from CSV; counts and rates in robotics_by_object.csv", fontsize=9)
     save(fig, "robotic_by_object")
     return {"matplotlib_version": matplotlib.__version__,
-            "latency_plot": "Not generated: exact timing invocation and warmup override are unrecorded; see the separate provenance audit for the recovered source protocol."}
+            "latency_plot": "Not generated: recorded native-pipeline timings are descriptive; source protocol and historical-command evidence are in the separate provenance and identity audits."}
 
 
 def run_analysis(inputs, output, plots=False, bootstrap_replicates=0, bootstrap_seed=0):

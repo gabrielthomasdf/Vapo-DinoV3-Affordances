@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "audit_script_sha256": "2e296107ffb169465b8019ad8d22c0aaafcdd5e0ecb51b5656f685425c4b9a16",
+  "metric_sources_sha256": {
+    "metricas_por_imagem.csv": "c0d9fd7e089f05f2bcace93d85215090cae429432076ae288a549e94d199c6c3",
+    "resumo.json": "2e1cb26b94d3ae04aa6df2c60ad800b8fc5b09cb2dc26f9639b70fbe6ed4b977",
+    "ab_results.csv": "c3e7cc0decebe2cd33a05fab370bc0e9dc37d93dcc9d06a531ac49c0409a771c"
+  },
+  "checkpoint_identities": {
+    "source_sha256": "741dac979fe92a7c8650008c7b2c806205452bc9aa28c2b73474a66f34e8163e",
+    "artifacts": {
+      "resnet18_gripper": {
+        "sha256": "0784ac06b828c6ce1fc880cd018a1f5fb34921bcad0b7e21add28fc4a337e1fa",
+        "public_reference": "trained_models/affordance/gripper_tabletop.ckpt",
+        "selected_setup_reference": true
+      },
+      "static_affordance": {
+        "sha256": "5fa2e6f32ab3bdecfc2a8ee6a89724f26dc365bc5c1a0b041db705006a899a5b",
+        "public_reference": "trained_models/affordance/static_tabletop.ckpt",
+        "selected_setup_reference": true
+      },
+      "dinov3_gripper": {
+        "sha256": "f1ac08ebe5eff5df150746e028cf4d1e1981e1cda5f54cd5cead59d2f65ade45",
+        "public_reference": "reproduction/dinov3_affordance/gripper_seed0/trained_models/best_val_miou.ckpt",
+        "selected_setup_reference": true
+      },
+      "sac_vapo": {
+        "sha256": "586ca6bfcc0a4cf4e134f28901341d351b3808097b4e6900a50a796c6e01dc3f",
+        "public_reference": "trained_models/policy/tabletop/vapo/trained_models/most_tasks_from_15.pth",
+        "selected_setup_reference": true
+      },
+      "sac_no_affordance_ablation": {
+        "sha256": "a0c9bb6f15872034f22a618714eb702c2f18bf9f3d52178a738c53e5af8cc46e",
+        "public_reference": "trained_models/policy/tabletop/baseline/trained_models/most_tasks_from_15.pth",
+        "selected_setup_reference": false
+      },
+      "dinov3_backbone": {
+        "sha256": "4057cbaaad8c16657adb09d6815f28d4164eeba30532fde23f0d17313124caea",
+        "public_reference": "dinov3_weights/dinov3_vits16plus_pretrain_lvd1689m.pth",
+        "selected_setup_reference": true
+      }
+    },
+    "verification": "SHA-256 identities recorded in the recovered manifest; checkpoint binaries were not rehashed locally.",
+    "runtime_identity_limit": "Logical references match recovered code/configs; hashes do not independently attest what was loaded at historical runtime."
+  },
+  "dataset_split_audit": {
+    "archive_sha256": "4d1ef5f15a2cef576099619240f0e078fb5e87d6d72ecf84db5e898f9c4490b9",
+    "member_sha256": {
+      "episodes_split.json": "b8f19ed0c1f1e66bf72036b9e217e6327804954f09e4965b81cfea10d687c9d7",
+      "tabletop_kitchen/episodes_split.json": "feed8afb39d11a3753b5cfdc0a913c8ff44e4f2a1940a05c6ee6a27836320636",
+      "tabletop_misc/episodes_split.json": "6fd15d0c668ba9df4f3549cdf5b59c04e97cbfd72e7ea25b5f54d3dea8d39b33",
+      "tabletop_tools/episodes_split.json": "b59673340fd8b01d81961a8fffe129f258a36ba46b8c56a422b7f57c67f03257"
+    },
+    "camera": "gripper",
+    "training_gripper_samples": 133528,
+    "validation_gripper_samples": 6386,
+    "training_validation_overlap": 0,
+    "matches_evaluated_ids_in_order": true,
+    "ordered_validation_ids_sha256": "865a92fe8f1e9a58c57c719844d573dcb6c8149110619c7d4ad215073abc4a54",
+    "scenes": [
+      {
+        "scene": "tabletop_kitchen",
+        "manifest_sha256": "feed8afb39d11a3753b5cfdc0a913c8ff44e4f2a1940a05c6ee6a27836320636",
+        "training_gripper_samples": 44733,
+        "validation_gripper_samples": 2108,
+        "ordered_validation_ids_sha256": "453c5c4c16b6d34b5380016c6c3073788fc40843af4c879111041c323f907a40",
+        "matches_merged_and_evaluated_scene_subset_in_order": true
+      },
+      {
+        "scene": "tabletop_misc",
+        "manifest_sha256": "6fd15d0c668ba9df4f3549cdf5b59c04e97cbfd72e7ea25b5f54d3dea8d39b33",
+        "training_gripper_samples": 42120,
+        "validation_gripper_samples": 1555,
+        "ordered_validation_ids_sha256": "225fbd3bdd681b86bf38da962431bf3ab933c9818139ee00f068c005a9cede5b",
+        "matches_merged_and_evaluated_scene_subset_in_order": true
+      },
+      {
+        "scene": "tabletop_tools",
+        "manifest_sha256": "b59673340fd8b01d81961a8fffe129f258a36ba46b8c56a422b7f57c67f03257",
+        "training_gripper_samples": 46675,
+        "validation_gripper_samples": 2723,
+        "ordered_validation_ids_sha256": "8e282de2b767f415210de776fcf8988ef0bbe3bb4afd9b8e62d1abb2a1d1851a",
+        "matches_merged_and_evaluated_scene_subset_in_order": true
+      }
+    ],
+    "fingerprint_encoding": "UTF-8 of sample IDs joined by newline, followed by one final newline",
+    "conclusion": "The merged manifest and scene subsets reproduce all evaluated sample IDs in order using the recovered loader semantics.",
+    "limits": "Sample membership/order verified; image/label file contents, dataset release and historical on-disk manifest bytes are not independently attested.",
+    "raw_sample_ids_exported": false
+  },
+  "historical_command_audit": {
+    "command_file_sha256": "338a64505238009feee60f30b8978622d30f677b418a3833227bd69a1e53dc94",
+    "evaluator_sha256": "41bbd3bdbdb40c01fc20db0675d4c65d3480a677334867268c249e39bdc3de55",
+    "reported_historical_command": "python eval_affordance_dinov3_vs_baseline.py --warmup 5 --amp",
+    "warmup_iterations_recorded": 5,
+    "warmup_default_in_source": 20,
+    "amp_recorded": true,
+    "amp_matches_recovered_summary": true,
+    "arguments_supported_by_source": true,
+    "checkpoint_config_defaults": {
+      "--dino-config": "reproduction/dinov3_affordance/gripper_seed0/.hydra/config.yaml",
+      "--dino-checkpoint": "reproduction/dinov3_affordance/gripper_seed0/trained_models/best_val_miou.ckpt",
+      "--baseline-checkpoint": "trained_models/affordance/gripper_tabletop.ckpt"
+    },
+    "evidence_level": "Command supplied in a recovered text artifact; consistent with code and AMP summary, without a contemporaneous execution trace.",
+    "actual_runtime_warmup_independently_attested": false
+  },
+  "execution_scope": "Saved artifact inspection only; no training, model inference or robot evaluation was performed."
+}

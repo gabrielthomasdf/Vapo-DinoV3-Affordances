@@ -2,7 +2,7 @@
   "schema_version": 1,
   "archive_sha256": "b04e3eacfb99538b5535a4f658da82ecf1169e868ff9a593927e71c0d8567441",
   "archive_bytes": 163835,
-  "audit_script_sha256": "cb522e8554200fef41d61ae180c6bc31644d5aca5bee2dce3b6173e70bdbd88e",
+  "audit_script_sha256": "da76617de896e4d13aa085a19fa5e9bd735779e5dc088436d18fd3c7079821e9",
   "member_sha256": {
     "eval_affordance_dinov3_vs_baseline.py": "41bbd3bdbdb40c01fc20db0675d4c65d3480a677334867268c249e39bdc3de55",
     "scripts/eval_tabletop.py": "a78d4186ae875766b9902243289994584894966834b1498c48fed0fda08b41cf",
@@ -141,10 +141,11 @@
     "full_perception_command_recovered": false
   },
   "limitations": [
-    "No checkpoint binaries or checkpoint content-hash manifest supplied.",
-    "No dataset/split manifest or exact perception command supplied.",
-    "Training seed is not established by the gripper_seed0 folder name.",
-    "Full model evaluation and physical-state/RNG reproduction remain unexecuted."
+    "Checkpoint hashes are recorded in a recovered manifest; weight binaries were not locally rehashed or runtime-attested.",
+    "Sample IDs and order match all split manifests; raw image/label contents and dataset release are not content-attested.",
+    "The reported historical command is compatible with code and AMP metadata, without a contemporaneous execution trace.",
+    "Training seed and complete control of all RNG streams/physical initial states remain undocumented.",
+    "Real comparative images were not found in the reported searches; no visual inference examples were fabricated."
   ],
   "supplement": {
     "archive_sha256": "439b16ceb6ea8bac6704c0be24e18e1e9d6ddca2f79186fe569258d64cab849e",
@@ -234,11 +235,18 @@
         "split.json": false
       }
     },
-    "remaining": [
-      "No checkpoint binaries or checkpoint content-hash manifest supplied.",
-      "No dataset/split manifest or exact perception command supplied.",
+    "package_scope_limits": [
+      "These two archives do not contain checkpoint binaries or a checkpoint content-hash manifest.",
+      "These two archives do not contain a dataset/split manifest or exact perception command.",
       "Training seed is not established by the gripper_seed0 folder name.",
-      "Full model evaluation and physical-state/RNG reproduction remain unexecuted."
+      "The audit inspected saved records and did not execute the researcher's existing experiments again."
     ]
+  },
+  "identity_evidence": {
+    "report_sha256": "d4ebb6ab9542c64f1d4f5ccd1f48a26bd18f3f23a579b35b111058eaabb3fea9",
+    "checkpoint_manifest_recorded": true,
+    "ordered_validation_ids_matched": true,
+    "reported_warmup_iterations": 5,
+    "command_execution_independently_attested": false
   }
 }

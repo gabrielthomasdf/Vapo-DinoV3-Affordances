@@ -144,3 +144,25 @@ def test_supplement_rejects_a_different_perception_source(tmp_path):
     primary["member_sha256"]["eval_affordance_dinov3_vs_baseline.py"] = "0" * 64
     with pytest.raises(audit.ValidationError):
         audit.audit_supplement(path, primary)
+
+
+@pytest.mark.parametrize("mismatch", (False, True))
+def test_identity_attachment_checks_all_metric_sources(tmp_path, mismatch):
+    hashes = {}
+    for name in ("metricas_por_imagem.csv", "resumo.json", "ab_results.csv"):
+        (tmp_path / name).write_text(name)
+        hashes[name] = hashlib.sha256(name.encode()).hexdigest()
+    identity = {"metric_sources_sha256": hashes, "dataset_split_audit": {"matches_evaluated_ids_in_order": True},
+                "historical_command_audit": {"evaluator_sha256": "a" * 64, "warmup_iterations_recorded": 5}}
+    if mismatch:
+        hashes["ab_results.csv"] = "b" * 64
+    path = tmp_path / "identity.json"
+    path.write_text(json.dumps(identity))
+    primary = {"member_sha256": {"eval_affordance_dinov3_vs_baseline.py": "a" * 64}}
+    if mismatch:
+        with pytest.raises(audit.ValidationError):
+            audit.attach_identity_report(primary, path, tmp_path)
+    else:
+        audit.attach_identity_report(primary, path, tmp_path)
+        assert primary["identity_evidence"]["reported_warmup_iterations"] == 5
+        assert not primary["identity_evidence"]["command_execution_independently_attested"]

@@ -20,8 +20,8 @@
       }
     },
     "recorded_experiment_commit": "bbded785430e5cded88ba57aa8ca62458ef038ce",
-    "analysis_base_commit": "8396d6fad56bc05183b1137f3fe674dd1ac6c8c3",
-    "analysis_script_sha256": "d08cefc5b5590159420ecde3d3cd9584ad67931c9fdb07442a64ec38db148526",
+    "analysis_base_commit": "16ee17e805f4496796d613717389a9964096b7eb",
+    "analysis_script_sha256": "a8bc72205dd83c305a2021238d1ef97288e4be58cca088314ce398c5da7e4e1e",
     "python_version": "3.14.6",
     "scope": "Recalculation from recovered artifacts; training, inference and simulation were not rerun.",
     "raw_rows_published": false
@@ -2286,6 +2286,6 @@
   ],
   "plots": {
     "matplotlib_version": "3.11.2",
-    "latency_plot": "Not generated: exact timing invocation and warmup override are unrecorded; see the separate provenance audit for the recovered source protocol."
+    "latency_plot": "Not generated: recorded native-pipeline timings are descriptive; source protocol and historical-command evidence are in the separate provenance and identity audits."
   }
 }

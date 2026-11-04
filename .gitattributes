@@ -1,0 +1,2 @@
+# GLAD OpenGL/EGL bindings are third-party simulator dependencies.
+VREnv/egl_check/glad/** linguist-vendored=true

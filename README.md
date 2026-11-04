@@ -2,7 +2,7 @@
 
 Research fork of [Visual Affordance-guided Policy Optimization (VAPO)](https://github.com/mees/vapo) developed during undergraduate research at UNICAMP. This project tests whether a DINOv3 visual encoder can improve VAPO's gripper-camera affordance estimates and, ultimately, robotic task success. The original VAPO method and code belong to its authors; this fork contributes the integration and evaluation tooling described below.
 
-**Key finding checked against recovered experimental artifacts:** DINOv3 improved segmentation scores under native preprocessing, while robotic success fell from **86.20% to 62.47%**. Resolution and label radius differ between approaches, so this is not an isolated encoder comparison. The CSV calculations have been reproduced; training, inference, and robotic evaluation have not been rerun. See the [artifact audit](docs/research-audit.md).
+**Key finding checked against recovered experimental artifacts:** DINOv3 improved segmentation scores under native preprocessing, while robotic success fell from **86.20% to 62.47%**. Resolution and label radius differ between approaches, so this is not an isolated encoder comparison. This consolidation audits the researcher's completed experiments and recalculates their saved records. See the [artifact audit](docs/research-audit.md); no additional training or evaluation is required for this documentation work.
 
 ## What this fork adds
 
@@ -36,6 +36,8 @@ DINOv3 is integrated at the **gripper affordance encoder**, not as a replacement
 
 The following metrics were recalculated from **6,386 paired image records** and **3,000 robotic episode records**. [Aggregate results and provenance](docs/experiments/recovered/analysis_summary.json) include SHA-256 hashes of the four private source files. Raw CSVs, sample paths, datasets, and weights are not distributed here.
 
+The four recovered split manifests reproduce the **same 6,386 validation sample IDs in the same order**, with no overlap with 133,528 training sample IDs. The [identity audit](docs/experiments/recovered/identity_audit.json) records manifest hashes and ordered-sample fingerprints. [Checkpoint identities](docs/experiments/recovered/checkpoints.sha256) record six recovered SHA-256 digests, including the shared SAC policy and DINOv3 backbone; these are supplied manifest identities, not a new local rehash of the weight files or proof of historical runtime contents.
+
 | Perception metric | Baseline | DINOv3 |
 | --- | ---: | ---: |
 | Binary mIoU, global counts | 0.724985 | 0.819045 |
@@ -43,7 +45,7 @@ The following metrics were recalculated from **6,386 paired image records** and 
 | Foreground recall, global counts | 0.562348 | 0.801815 |
 | Recorded mean latency, ms | 3.682468 | 24.412255 |
 
-The recovered setup uses **64 px / label radius 10** for baseline and **128 px / label radius 20** for DINOv3, on an **NVIDIA RTX A5500 with AMP enabled**, according to the recovered JSON. Global scores sum confusion counts within each model's native pixel grid. The recovered evaluator measures synchronized **forward-only latency at batch size 1**, excluding data loading, device transfer, argmax, Hough voting and SAC. Its default warmup is 20 iterations; the exact historical invocation is missing, so timings remain descriptive rather than a controlled encoder benchmark.
+The recovered setup uses **64 px / label radius 10** for baseline and **128 px / label radius 20** for DINOv3, on an **NVIDIA RTX A5500 with AMP enabled**, according to the recovered JSON. Global scores sum confusion counts within each model's native pixel grid. The evaluator measures synchronized **forward-only latency at batch size 1**, excluding data loading, device transfer, argmax, Hough voting and SAC. The supplied historical command is `python eval_affordance_dinov3_vs_baseline.py --warmup 5 --amp`: its five warmup iterations override the source default of 20, and AMP agrees with the summary. This command is supported by a recovered text record and code review, without a contemporaneous execution trace; timings remain descriptive native-pipeline measurements.
 
 ![Perception metrics under the recovered native preprocessing conditions](docs/experiments/recovered/perception.png)
 
@@ -54,7 +56,7 @@ The recovered setup uses **64 px / label radius 10** for baseline and **128 px /
 
 ![Robotic success rates recalculated from the recovered records](docs/experiments/recovered/robotic_success.png)
 
-Both approaches contain 100 labeled seeds with the same 15 objects per seed. All **3,000 CSV rows match the 200 recovered run logs**, and all recorded exit statuses are zero. Hydra snapshots and the archived evaluator confirm requested seeds 0–99 and propagation into the environment configuration. Both approaches reference the same SAC policy path/name; weight hashes and identical physical starting states remain unverified. The largest drops include `frying_pan_1` (100% to 8%) and `hammer_2` (87% to 3%). [All object results](docs/experiments/recovered/robotic_by_object.png) show smaller gains for some objects. Confidence intervals are omitted by default because independent training repetitions and all randomness sources are not established.
+Both approaches contain 100 labeled seeds with the same 15 objects per seed. All **3,000 CSV rows match the 200 recovered run logs**, and all recorded exit statuses are zero. Hydra snapshots and the archived evaluator confirm requested seeds 0–99 and propagation into the environment configuration. Both approaches reference the same SAC policy path/name, now associated with a recorded SHA-256 identity; historical loaded bytes and identical physical starting states are not independently attested. The largest drops include `frying_pan_1` (100% to 8%) and `hammer_2` (87% to 3%). [All object results](docs/experiments/recovered/robotic_by_object.png) show smaller gains for some objects. Confidence intervals are omitted by default because independent training repetitions and all randomness sources are not established.
 
 Here, baseline denotes the original **VAPO with ResNet18 affordances and reward shaping**. The recovered policy config enables affordance inputs, distance and reward densification. A separate saved policy named `baseline` disables those features, but the A/B runners select the `vapo` policy for both approaches.
 
@@ -74,6 +76,8 @@ To generate the figures, install `requirements-analysis.txt` and add `--plots`. 
 
 The supplementary [provenance audit](docs/experiments/recovered/provenance_audit.json) checks the private archive's logs, 400 Hydra files, commits and checkpoint references. Run `scripts/audit_recovered_provenance.py --help` for its configurable paths.
 
+The standard-library script `scripts/audit_experiment_identity.py` additionally checks the six recorded checkpoint hashes, all four split manifests and the supplied command without loading weights or executing model code. See [audit instructions](docs/experimental-reproduction.md#checkpoint-split-and-command-evidence).
+
 The project targets the original VAPO Linux/CUDA environment. Follow [local setup](docs/local_setup.md) or [Docker setup](docs/docker_setup.md), then install dependencies and run:
 
 ```bash
@@ -84,7 +88,7 @@ The new calculation tests run independently of the research environment: `python
 
 ### Level 2: full experiments
 
-For affordance training, provide the simulation playdata and DINOv3 code/weights, then use the configured training entry point:
+The following entry points are retained as reference for the research workflow. This consolidation reviews completed experiments and does not execute or require new training or evaluation. The affordance training entry point is:
 
 ```bash
 export VAPO_ROOT="$PWD"
@@ -93,7 +97,7 @@ export DINOV3_WEIGHTS_PATH=/path/to/authorized/dinov3_vits16plus.pth
 python ./scripts/train_affordance.py dataset_name=simulation dataset.cam=gripper model_name=aff_gripper_dinov3
 ```
 
-The checked-in `config/cfg_affordance.yaml` sets 50 epochs, `batch_size=2`, mixed precision, and GPU training. It saves validation checkpoints under the Hydra run directory. [Original data download instructions](docs/upstream-readme.md#download-the-playdata) describe the upstream simulation dataset (37.7 GB). These are entry-point templates, not verified commands for recreating the recovered run. Its historical DINOv3 training config/overrides are recovered; the dataset snapshot and checkpoint content hashes remain unavailable. The training console records the best checkpoint at epoch 28 with `val_miou=0.72213`, consistent with the reconstructed training convention.
+The checked-in `config/cfg_affordance.yaml` sets 50 epochs, `batch_size=2`, mixed precision, and GPU training. It saves validation checkpoints under the Hydra run directory. [Original data download instructions](docs/upstream-readme.md#download-the-playdata) describe the upstream simulation dataset (37.7 GB). Historical DINOv3 training config/overrides, split manifests and recorded checkpoint hashes are recovered. Raw image/label contents and the exact dataset release remain unattested. The training console records the best checkpoint at epoch 28 with `val_miou=0.72213`, consistent with the reconstructed training convention.
 
 To evaluate a trained tabletop policy with an opt-in DINOv3 gripper affordance model:
 
@@ -105,15 +109,17 @@ python ./scripts/eval_tabletop.py --config-name cfg_tabletop_dinov3 \
   test.eval_seed=0
 ```
 
-The policy run must contain `.hydra/config.yaml` and `trained_models/most_tasks_from_15.pth`; the static-camera affordance checkpoint and simulator assets are also required. `test.eval_seed=0` is an example, **not** the verified seed of the reported 1,500-episode comparison. The evaluation uses the saved SAC policy configuration with the current gripper affordance selection. See [audit and reproduction gaps](docs/research-audit.md) before treating this as a reproduction of the reported result.
+The policy run contains `.hydra/config.yaml` and references `trained_models/most_tasks_from_15.pth`; the static-camera checkpoint and simulator assets are additional inputs. `test.eval_seed=0` illustrates one of the recovered sweep's seeds 0–99. The evaluation uses the saved SAC policy configuration with the current gripper affordance selection. These reference commands are not new executions or evidence beyond the recovered records.
 
 For single-observation diagnostics, see `scripts/validate_affordance_observation_sim.py` and `scripts/real_world/validate_affordance_observation.py`.
 
 The recovered [perception evaluator](scripts/eval_affordance_dinov3_vs_baseline.py) is preserved verbatim after source review. [Reproduction notes](docs/experimental-reproduction.md#recovered-provenance-package) document its arguments, timing protocol, recovered environment versions, and remaining missing inputs. It was not executed during this consolidation.
 
-## Limitations and next experiments
+## Provenance limits
 
-Recover checkpoint content hashes, the dataset/split manifest and exact perception invocation/warmup settings. The saved SAC policy config and DINOv3 training config/overrides are recovered alongside the runners, parser and per-seed CLI configs. The training folder name `gripper_seed0` does not establish an explicitly set training seed. Full RNG determinism, paired physical initial states and model execution still require verification. Center-selection diagnostics are available in the code, but recovered center-error measurements are missing. These remain hypotheses for the task-success gap. Real segmentation examples require paired source images, predictions, and permission to share them.
+The recovered hashes identify reported weight artifacts; they do not independently certify the bytes loaded during the historical executions. Split sample identity/order is verified, while raw image/label content hashes and a dataset release identifier remain unavailable. The recorded command is code-compatible but lacks a contemporaneous execution trace. Training-seed assignment, control of all RNG streams and paired physical initial states are not established. These limits are documented without making repeated experiments a completion requirement.
+
+According to the supplied search record, real comparative segmentation images were not found in `reproduction/`, the project under the searched filename patterns, or `/tmp/vapo_ab`. No synthetic inference examples have been added. The figures above are derived from saved numerical records.
 
 ## Attribution and license
 
